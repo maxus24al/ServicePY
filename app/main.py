@@ -33,7 +33,8 @@ async def create_product(product: Product):
         id=product.id,
         name=product.name,
         description=product.description,
-        image=image_description
+        image=image_description,
+        promt=product.promt
     )
 
     return response;
@@ -52,7 +53,9 @@ def create_products(products: list[Product]):
             id=product.id, 
             name=product.name,
             description=product.description,
-            image=image_description)
+            image=image_description,
+            promt=product.promt
+        )
 )
     return response
 

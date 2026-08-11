@@ -14,7 +14,7 @@ class Product(BaseModel):
     promt: str
 
 
-def add_product(id: int, name: str, description: str, image: str):
+def add_product(id: int, name: str, description: str, image: str, promt: str):
     text = f"""
     name: {name}
     description: {description}
@@ -31,12 +31,13 @@ def add_product(id: int, name: str, description: str, image: str):
                     "name": name,
                     "description": description,
                     "image": image,
+                    "promt": promt
                 },
             )
         ],
     )
 
-    return {"id": id, "image": image};
+    return {"id": id, "image": image, "promt": promt};
 
 def get_products():
     points, _ = client.scroll(
@@ -50,6 +51,7 @@ def get_products():
             "name": point.payload["name"],
             "description": point.payload["description"],
             "image": point.payload["image"],
+            "promt": point.payload["promt"]
         }
         for point in points
     ]
