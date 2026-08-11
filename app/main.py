@@ -27,7 +27,7 @@ def startup():
 async def create_product(product: Product):
 
 
-    image_description = image_des(product.image)
+    image_description = image_des(product.image, product.promt)
 
     response = add_product(
         id=product.id,

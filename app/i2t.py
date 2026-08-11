@@ -12,7 +12,7 @@ client = OpenAI(
     project=FOLDER_ID,
 )
 
-def image_des(image_url: str):
+def image_des(image_url: str, promt: str):
     response = requests.get(image_url, timeout=30)
 
     response.raise_for_status()
@@ -30,14 +30,7 @@ def image_des(image_url: str):
                 "content": [
                     {
                         "type": "text",
-                        "text": (
-                            "Опиши только один главный предмет мебели с максимальным "
-                            "количеством объективных признаков. Используй обычный связный "
-                            "текст. Не упоминай ничего, кроме этого предмета. "
-                            "Обязательно опиши форму, цвет, материал, конструкцию, "
-                            "обивку, ножки, подлокотники, спинку, фактуру и другие "
-                            "видимые особенности."
-                        ),
+                        "text": promt,
                     },
                     {
                         "type": "image_url",

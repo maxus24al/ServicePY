@@ -11,6 +11,7 @@ class Product(BaseModel):
     name: str
     description: str
     image: str
+    promt: str
 
 
 def add_product(id: int, name: str, description: str, image: str):
