@@ -11,7 +11,8 @@ POST /product
 Ответ:
 {
     "id": int,
-    "image": string
+    "image": string,
+    "promt": string
 }
 
 POST /products
@@ -37,11 +38,13 @@ POST /products
 [
     {
         "id": int,
-        "image": string
+        "image": string,
+        "promt": string
     },
     {
         "id": int,
-        "image": string
+        "image": string,
+        "promt": string
     }
 ]
 
