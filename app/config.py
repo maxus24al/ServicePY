@@ -1,0 +1,6 @@
+QDRANT_HOST = "qdrant"
+QDRANT_PORT = 6333
+
+COLLECTION = "products"
+
+VECTOR_SIZE = 256
