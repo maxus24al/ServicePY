@@ -4,7 +4,8 @@ POST /product
     "id": int,
     "name": string,
     "description": string,
-    "image": url
+    "image": url,
+    "promt": string
 }
 
 Ответ:
@@ -20,13 +21,15 @@ POST /products
         "id": int,
         "name": string,
         "description": string,
-        "image": url
+        "image": url,
+        "promt": string
     },
     {
         "id": int,
         "name": string,
         "description": string,
-        "image": url
+        "image": url,
+        "promt": string
     }
 ]
 
