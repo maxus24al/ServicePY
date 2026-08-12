@@ -72,16 +72,24 @@ def create_products(products: list[Product]):
 
     for product in products:
 
-        image_description = image_des(product.image, product.promt)
+        if(product.image != ''):
+            image_description = image_des(product.image, product.promt)
+    
+            response.append(add_product_w_image(
+                id=product.id,
+                name=product.name,
+                description=product.description,
+                image=image_description,
+                promt=product.promt
+            ))
+    
+        else:
+            response.append(add_product(
+                id=product.id,
+                name=product.name,
+                description=product.description,
+            ))
 
-        response.append(add_product(
-            id=product.id, 
-            name=product.name,
-            description=product.description,
-            image=image_description,
-            promt=product.promt
-        )
-)
     return response
 
 @app.post("/products/images")
@@ -112,9 +120,10 @@ def search_products(q: str, limit: int = 5):
     return [
         {
             "id": point.id,
-            "name": point.payload.get["name"],
-            "description": point.payload.get["description"],
-            "image": point.payload.get["image"],
+            "name": point.payload.get("name"),
+            "description": point.payload.get("description"),
+            "image": point.payload.get("image"),
+            "promt": point.payload.get("promt"),
             "score": point.score,
         }
         for point in points

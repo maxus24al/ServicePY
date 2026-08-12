@@ -27,7 +27,7 @@ def search(q: str, limit: int = 5):
             ),
                 
         ],
-        query=models.RfQuery(
+        query=models.RrfQuery(
             rrf=models.Rrf(
                 weights=[
                     0.45,

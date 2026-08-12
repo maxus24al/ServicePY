@@ -16,8 +16,8 @@ class Product(BaseModel):
     id: int
     name: str
     description: str
-    image: str
-    promt: str
+    image: str = ""
+    promt: str = ""
 
 
 def add_product(
