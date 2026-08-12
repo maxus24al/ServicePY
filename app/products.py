@@ -1,4 +1,4 @@
-from qdrant_client.models import PointStruct
+from qdrant_client.models import PointStruct, PointVectors
 
 from app.qdrant_cl import client
 from app.config import COLLECTION
@@ -6,20 +6,13 @@ from app.t2v import embed_doc
 
 from pydantic import BaseModel
 
-
-class Product(BaseModel):
-    id: int
-    name: str
-    description: str
-
-
 class ProductImage(BaseModel):
     id: int
     image: str
     promt: str
 
 
-class ProductWithImage(BaseModel):
+class Product(BaseModel):
     id: int
     name: str
     description: str
@@ -27,20 +20,21 @@ class ProductWithImage(BaseModel):
     promt: str
 
 
-def add_product_without_image(
+def add_product(
     id: int,
     name: str,
     description: str,
 ):
-
+    
     client.upsert(
         collection_name=COLLECTION,
         points=[
             PointStruct(
                 id=id,
                 vector={
+                    
                     "name": embed_doc(name),
-                    "description": embed_doc(description)
+                    "description": embed_doc(description),
                 },
                 payload={
                     "name": name,
@@ -56,8 +50,7 @@ def add_product_without_image(
         "description": description,
     }
 
-
-def add_product_with_image(
+def add_product_w_image(
     id: int,
     name: str,
     description: str,
@@ -93,6 +86,7 @@ def add_product_with_image(
         "image": image,
         "promt": promt,
     }
+
 
 
 def add_image(
@@ -153,3 +147,41 @@ def get_products():
         }
         for point in points
     ]
+
+def edit_image(
+    id: int,
+    image: str,
+):
+    points = client.retrieve(
+        collection_name=COLLECTION,
+        ids=[id],
+        with_payload=False,
+    )
+
+    if not points:
+        raise ValueError(f"Product with id={id} not found")
+
+    client.update_vectors(
+        collection_name=COLLECTION,
+        points=[
+            PointVectors(
+                id=id,
+                vector={
+                    "image": embed_doc(image),
+                },
+            )
+        ],
+    )
+
+    client.set_payload(
+        collection_name=COLLECTION,
+        payload={
+            "image": image,
+        },
+        points=[id],
+    )
+
+    return {
+        "id": id,
+        "image": image,
+    }

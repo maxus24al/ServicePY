@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 
 from app.qdrant_cl import create_collection
-from app.products import add_product_with_image, add_product_without_image, add_image, Product, ProductImage, ProductWithImage, get_products
+from app.products import add_product, add_product_w_image, add_image, Product, ProductImage, get_products, edit_image
 from app.search import search
 from app.i2t import image_des
 
@@ -18,6 +18,7 @@ app = FastAPI()
 
 #     return {"description": image_des(path)}
 
+
 @app.on_event("startup")
 def startup():
     create_collection()
@@ -26,29 +27,23 @@ def startup():
 @app.post("/product")
 async def create_product(product: Product):
 
-    response = add_product_without_image(
-        id=product.id,
-        name=product.name,
-        description=product.description,
-    )
+    if(product.image != ''):
+        image_description = image_des(product.image, product.promt)
 
-    return response;
+        response = add_product_w_image(
+            id=product.id,
+            name=product.name,
+            description=product.description,
+            image=image_description,
+            promt=product.promt
+        )
 
-
-
-@app.post("/product_w_image")
-async def create_product(product: ProductWithImage):
-
-
-    image_description = image_des(product.image, product.promt)
-
-    response = add_product_with_image(
-        id=product.id,
-        name=product.name,
-        description=product.description,
-        image=image_description,
-        promt=product.promt
-    )
+    else:
+        response = add_product(
+            id=product.id,
+            name=product.name,
+            description=product.description,
+        )
 
     return response;
 
@@ -77,24 +72,9 @@ def create_products(products: list[Product]):
 
     for product in products:
 
-        response.append(add_product_without_image(
-            id=product.id, 
-            name=product.name,
-            description=product.description
-        )
-)
-    return response
-
-@app.post("/products_w_image")
-def create_products(products: list[ProductWithImage]):
-
-    response = []
-
-    for product in products:
-
         image_description = image_des(product.image, product.promt)
 
-        response.append(add_product_with_image(
+        response.append(add_product(
             id=product.id, 
             name=product.name,
             description=product.description,
@@ -143,3 +123,7 @@ def search_products(q: str, limit: int = 5):
 @app.get("/products")
 def get_all_products():
     return get_products()
+
+@app.post("/product/image/edit")
+def edit_product_image(id: int, text: str):
+    edit_image(id, text)
