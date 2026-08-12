@@ -15,11 +15,13 @@ def embed_doc(text: str):
     body = {
         "modelUri": f"emb://{FOLDER_ID}/text-embeddings-v2-doc/latest",
         "text": text,
+        "dim": 768
     }
     
     response = requests.post(URL, headers=headers, json=body)
 
     response.raise_for_status()
+
     return response.json()["embedding"]
 
 
@@ -27,10 +29,12 @@ def embed_query(text: str):
     body = {
         "modelUri": f"emb://{FOLDER_ID}/text-embeddings-v2-query/latest",
         "text": text,
+        "dim": 768
     }
 
     response = requests.post(URL, headers=headers, json=body)
 
     response.raise_for_status()
+
     return response.json()["embedding"]
 
