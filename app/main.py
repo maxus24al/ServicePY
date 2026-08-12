@@ -132,9 +132,9 @@ def search_products(q: str, limit: int = 5):
     return [
         {
             "id": point.id,
-            "name": point.payload["name"],
-            "description": point.payload["description"],
-            "image": point.payload["image"],
+            "name": point.payload.get["name"],
+            "description": point.payload.get["description"],
+            "image": point.payload.get["image"],
             "score": point.score,
         }
         for point in points

@@ -23,8 +23,18 @@ def create_collection():
 
     client.create_collection(
         collection_name=COLLECTION,
-        vectors_config=VectorParams(
-            size=VECTOR_SIZE,
-            distance=Distance.COSINE,
-        ),
+        vectors_config={
+            "name": VectorParams(
+                size=VECTOR_SIZE,
+                distance=Distance.COSINE,
+            ),
+            "description": VectorParams(
+                size=VECTOR_SIZE,
+                distance=Distance.COSINE,
+            ),
+            "image": VectorParams(
+                size=VECTOR_SIZE,
+                distance=Distance.COSINE,
+            ),
+        },
     )

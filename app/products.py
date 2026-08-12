@@ -32,17 +32,16 @@ def add_product_without_image(
     name: str,
     description: str,
 ):
-    text = f"""
-name: {name}
-description: {description}
-"""
 
     client.upsert(
         collection_name=COLLECTION,
         points=[
             PointStruct(
                 id=id,
-                vector=embed_doc(text),
+                vector={
+                    "name": embed_doc(name),
+                    "description": embed_doc(description)
+                },
                 payload={
                     "name": name,
                     "description": description,
@@ -65,18 +64,18 @@ def add_product_with_image(
     image: str,
     promt: str,
 ):
-    text = f"""
-name: {name}
-description: {description}
-image: {image}
-"""
-
+    
     client.upsert(
         collection_name=COLLECTION,
         points=[
             PointStruct(
                 id=id,
-                vector=embed_doc(text),
+                vector={
+                    
+                    "name": embed_doc(name),
+                    "description": embed_doc(description),
+                    "image": embed_doc(image)
+                },
                 payload={
                     "name": name,
                     "description": description,
@@ -104,36 +103,31 @@ def add_image(
     points = client.retrieve(
         collection_name=COLLECTION,
         ids=[id],
-        with_payload=True,
+        with_payload=False,
     )
 
     if not points:
         raise ValueError(f"Product with id={id} not found")
 
-    product = points[0]
-
-    name = product.payload["name"]
-    description = product.payload["description"]
-
-    text = f"""
-name: {name}
-description: {description}
-image: {image}
-"""
-
-    client.upsert(
+    client.update_vectors(
         collection_name=COLLECTION,
         points=[
-            PointStruct(
+            PointVectors(
                 id=id,
-                vector=embed_doc(text),
-                payload={
-                    **product.payload,
-                    "image": image,
-                    "promt": promt,
+                vector={
+                    "image": embed_doc(image),
                 },
             )
         ],
+    )
+
+    client.set_payload(
+        collection_name=COLLECTION,
+        payload={
+            "image": image,
+            "promt": promt,
+        },
+        points=[id],
     )
 
     return {
