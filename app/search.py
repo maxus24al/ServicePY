@@ -13,26 +13,27 @@ def search(q: str, limit: int = 5):
             models.Prefetch(
                 query=vector,
                 using="name",
-                limit=50
+                limit=15
             ),
             models.Prefetch(
                 query=vector,
                 using="description",
-                limit=50
+                limit=15
             ),
             models.Prefetch(
                 query=vector,
                 using="image",
-                limit=50
+                limit=15
             ),
                 
         ],
         query=models.RrfQuery(
             rrf=models.Rrf(
+                k=15,
                 weights=[
-                    0.45,
-                    0.35,
-                    0.2
+                    0.15,
+                    0.75,
+                    0.1
                 ]
             )
         ),
