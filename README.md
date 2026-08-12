@@ -3,6 +3,21 @@ POST /product
 {
     "id": int,
     "name": string,
+    "description": string
+}
+
+Ответ:
+{
+    "id": int,
+    "name": string,
+    "description": string
+}
+
+POST /product_w_image
+Запрос:
+{
+    "id": int,
+    "name": string,
     "description": string,
     "image": url,
     "promt": string
@@ -10,12 +25,58 @@ POST /product
 
 Ответ:
 {
-    "id": int,
+    "id": id,
+    "name": name,
+    "description": description,
+    "image": image,
+    "promt": promt
+}
+
+POST /product/image
+Запрос:
+{
+    "id": id,
     "image": string,
     "promt": string
 }
 
+Ответ:
+{
+    "id": id,
+    "image": url,
+    "promt": string
+}
+
 POST /products
+Запрос:
+[
+    {
+        "id": int,
+        "name": "string",
+        "description": "string"
+    },
+    {
+        "id": int,
+        "name": "string",
+        "description": "string"
+    }
+]
+
+Ответ:
+[
+    {
+        "id": int,
+        "name": string,
+        "description": string
+    },
+    {
+        "id": int,
+        "name": string,
+        "description": string
+    }
+]
+
+POST /products_w_image
 Запрос:
 [
     {
@@ -37,12 +98,45 @@ POST /products
 Ответ:
 [
     {
-        "id": int,
+        "id": id,
+        "name": name,
+        "description": description,
+        "image": image,
+        "promt": promt
+    },
+    {
+        "id": id,
+        "name": name,
+        "description": description,
+        "image": image,
+        "promt": promt
+    }
+]
+
+POST /products/image
+Запрос:
+[
+    {
+        "id": id,
+        "image": url,
+        "promt": string
+    },
+    {
+        "id": id,
+        "image": url,
+        "promt": string
+    }
+]
+
+Ответ:
+[
+    {
+        "id": id,
         "image": string,
         "promt": string
     },
     {
-        "id": int,
+        "id": id,
         "image": string,
         "promt": string
     }
