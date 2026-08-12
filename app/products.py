@@ -15,6 +15,7 @@ class ProductImage(BaseModel):
 class Product(BaseModel):
     id: int
     name: str
+    type: str
     description: str
     image: str = ""
     promt: str = ""
@@ -22,6 +23,7 @@ class Product(BaseModel):
 
 def add_product(
     id: int,
+    type: str,
     name: str,
     description: str,
 ):
@@ -34,10 +36,12 @@ def add_product(
                 vector={
                     
                     "name": embed_doc(name),
+                    "type": embed_doc(type),
                     "description": embed_doc(description),
                 },
                 payload={
                     "name": name,
+                    "type": type,
                     "description": description,
                 },
             )
@@ -47,12 +51,14 @@ def add_product(
     return {
         "id": id,
         "name": name,
+        "type": type,
         "description": description,
     }
 
 def add_product_w_image(
     id: int,
     name: str,
+    type: type,
     description: str,
     image: str,
     promt: str,
@@ -66,11 +72,13 @@ def add_product_w_image(
                 vector={
                     
                     "name": embed_doc(name),
+                    "type": embed_doc(type),
                     "description": embed_doc(description),
                     "image": embed_doc(image)
                 },
                 payload={
                     "name": name,
+                    "type": type,
                     "description": description,
                     "image": image,
                     "promt": promt,
@@ -82,6 +90,7 @@ def add_product_w_image(
     return {
         "id": id,
         "name": name,
+        "type": type,
         "description": description,
         "image": image,
         "promt": promt,
@@ -141,6 +150,7 @@ def get_products():
         {
             "id": point.id,
             "name": point.payload.get("name"),
+            "type": point.payload.get("type"),
             "description": point.payload.get("description"),
             "image": point.payload.get("image"),
             "promt": point.payload.get("promt"),

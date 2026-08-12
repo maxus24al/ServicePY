@@ -17,6 +17,11 @@ def search(q: str, limit: int = 5):
             ),
             models.Prefetch(
                 query=vector,
+                using="type",
+                limit=15
+            ),
+            models.Prefetch(
+                query=vector,
                 using="description",
                 limit=15
             ),
@@ -31,8 +36,9 @@ def search(q: str, limit: int = 5):
             rrf=models.Rrf(
                 k=15,
                 weights=[
-                    0.15,
-                    0.75,
+                    0.1,
+                    0.4,
+                    0.4,
                     0.1
                 ]
             )

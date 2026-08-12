@@ -33,6 +33,7 @@ async def create_product(product: Product):
         response = add_product_w_image(
             id=product.id,
             name=product.name,
+            type=product.type,
             description=product.description,
             image=image_description,
             promt=product.promt
@@ -42,6 +43,7 @@ async def create_product(product: Product):
         response = add_product(
             id=product.id,
             name=product.name,
+            type=product.type,
             description=product.description,
         )
 
@@ -78,6 +80,7 @@ def create_products(products: list[Product]):
             response.append(add_product_w_image(
                 id=product.id,
                 name=product.name,
+                type=product.type,
                 description=product.description,
                 image=image_description,
                 promt=product.promt
@@ -87,6 +90,7 @@ def create_products(products: list[Product]):
             response.append(add_product(
                 id=product.id,
                 name=product.name,
+                type=product.type,
                 description=product.description,
             ))
 
@@ -121,6 +125,7 @@ def search_products(q: str, limit: int = 5):
         {
             "id": point.id,
             "name": point.payload.get("name"),
+            "type": point.payload.get("type"),
             "description": point.payload.get("description"),
             "image": point.payload.get("image"),
             "promt": point.payload.get("promt"),

@@ -28,6 +28,10 @@ def create_collection():
                 size=VECTOR_SIZE,
                 distance=Distance.COSINE,
             ),
+            "type": VectorParams(
+                size=VECTOR_SIZE,
+                distance=Distance.COSINE,
+            ),
             "description": VectorParams(
                 size=VECTOR_SIZE,
                 distance=Distance.COSINE,
