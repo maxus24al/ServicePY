@@ -3,21 +3,6 @@ POST /product
 {
     "id": int,
     "name": string,
-    "description": string
-}
-
-Ответ:
-{
-    "id": int,
-    "name": string,
-    "description": string
-}
-
-POST /product_w_image
-Запрос:
-{
-    "id": int,
-    "name": string,
     "description": string,
     "image": url,
     "promt": string
@@ -48,35 +33,6 @@ POST /product/image
 }
 
 POST /products
-Запрос:
-[
-    {
-        "id": int,
-        "name": "string",
-        "description": "string"
-    },
-    {
-        "id": int,
-        "name": "string",
-        "description": "string"
-    }
-]
-
-Ответ:
-[
-    {
-        "id": int,
-        "name": string,
-        "description": string
-    },
-    {
-        "id": int,
-        "name": string,
-        "description": string
-    }
-]
-
-POST /products_w_image
 Запрос:
 [
     {
@@ -188,3 +144,10 @@ GET /products
     }
 
 ]
+
+POST /product/image/edit
+Параметры:
+ id
+ text
+
+Запрос /product/image/edit?id=...&text=...
