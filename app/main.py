@@ -1,4 +1,6 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, status, Header, Depends
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+import os
 
 from app.qdrant_cl import create_collection
 from app.products import add_product, add_product_w_image, add_image, Product, ProductImage, get_products, edit_image
@@ -7,7 +9,7 @@ from app.i2t import image_des
 
 app = FastAPI()
 
-
+API_TOKEN = os.environ["API_TOKEN"]
 
 # @app.post("/image-description")
 # async def image_description(file: UploadFile = File(...)):
@@ -19,12 +21,24 @@ app = FastAPI()
 #     return {"description": image_des(path)}
 
 
+security_scheme = HTTPBearer()
+
+async def verify_token(
+    credentials: HTTPAuthorizationCredentials = Depends(security_scheme)
+):
+    
+    if credentials.credentials != API_TOKEN:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Unauthorized",
+        )
+
 @app.on_event("startup")
 def startup():
     create_collection()
 
 
-@app.post("/product")
+@app.post("/product", dependencies=[Depends(verify_token)])
 async def create_product(product: Product):
 
     if(product.image != ''):
@@ -50,7 +64,7 @@ async def create_product(product: Product):
     return response;
 
 
-@app.post("/product/image")
+@app.post("/product/image", dependencies=[Depends(verify_token)])
 async def add_product_image(product: ProductImage):
 
     image_description = image_des(
@@ -67,7 +81,7 @@ async def add_product_image(product: ProductImage):
     return response
 
 
-@app.post("/products")
+@app.post("/products", dependencies=[Depends(verify_token)])
 def create_products(products: list[Product]):
 
     response = []
@@ -96,7 +110,7 @@ def create_products(products: list[Product]):
 
     return response
 
-@app.post("/products/images")
+@app.post("/products/images", dependencies=[Depends(verify_token)])
 async def add_products_images(products: list[ProductImage]):
 
     response = []
@@ -117,7 +131,7 @@ async def add_products_images(products: list[ProductImage]):
 
     return response
 
-@app.get("/search")
+@app.get("/search", dependencies=[Depends(verify_token)])
 def search_products(q: str, limit: int = 5):
     points = search(q, limit)
 
@@ -134,10 +148,10 @@ def search_products(q: str, limit: int = 5):
         for point in points
     ]
 
-@app.get("/products")
+@app.get("/products", dependencies=[Depends(verify_token)])
 def get_all_products():
     return get_products()
 
-@app.post("/product/image/edit")
+@app.post("/product/image/edit", dependencies=[Depends(verify_token)])
 def edit_product_image(id: int, text: str):
     edit_image(id, text)
