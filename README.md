@@ -1,3 +1,7 @@
+Авторизация:
+ В header запроса прописать
+ 'Authorization': 'Bearer API_TOKEN'
+
 POST /product
 Запрос:
 {
