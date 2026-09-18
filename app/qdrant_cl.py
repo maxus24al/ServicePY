@@ -1,5 +1,6 @@
-from qdrant_client import QdrantClient
-from qdrant_client.models import Distance, VectorParams
+from qdrant_client import QdrantClient, models
+from fastembed import SparseTextEmbedding 
+from qdrant_client.models import Distance, VectorParams, TextIndexParams, TokenizerType
 from qdrant_client.http.exceptions import UnexpectedResponse
 
 from app.config import (
@@ -13,6 +14,9 @@ client = QdrantClient(
     host=QDRANT_HOST,
     port=QDRANT_PORT,
 )
+sparse_model = SparseTextEmbedding(model_name="Qdrant/bm25")
+
+print(sparse_model)
 
 
 def create_collection():
@@ -41,4 +45,43 @@ def create_collection():
                 distance=Distance.COSINE,
             ),
         },
+        sparse_vectors_config={
+                "text_sparse": models.SparseVectorParams()
+            }
+    )
+    
+    client.create_payload_index(
+        collection_name=COLLECTION,
+        field_name="description",
+        field_schema=TextIndexParams(
+            type="text",
+            tokenizer=TokenizerType.WORD,
+            min_token_len = 2,
+            max_token_len = 20,
+            lowercase = True
+        )
+    )
+
+    client.create_payload_index(
+        collection_name=COLLECTION,
+        field_name="name",
+        field_schema=TextIndexParams(
+            type="text",
+            tokenizer=TokenizerType.WORD,
+            min_token_len = 2,
+            max_token_len = 20,
+            lowercase = True
+        )
+    )
+
+    client.create_payload_index(
+        collection_name=COLLECTION,
+        field_name="type",
+        field_schema=TextIndexParams(
+            type="text",
+            tokenizer=TokenizerType.WORD,
+            min_token_len = 2,
+            max_token_len = 20,
+            lowercase = True
+        )
     )

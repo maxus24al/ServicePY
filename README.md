@@ -7,6 +7,7 @@ POST /product
 {
     "id": int,
     "name": string,
+    "type": string,
     "description": string,
     "image": url,
     "promt": string
@@ -16,6 +17,7 @@ POST /product
 {
     "id": id,
     "name": name,
+    "type": string,
     "description": description,
     "image": image,
     "promt": promt
@@ -42,6 +44,7 @@ POST /products
     {
         "id": int,
         "name": string,
+        "type": string,
         "description": string,
         "image": url,
         "promt": string
@@ -49,6 +52,7 @@ POST /products
     {
         "id": int,
         "name": string,
+        "type": string,
         "description": string,
         "image": url,
         "promt": string
@@ -60,6 +64,7 @@ POST /products
     {
         "id": id,
         "name": name,
+        "type": string,
         "description": description,
         "image": image,
         "promt": promt
@@ -67,6 +72,7 @@ POST /products
     {
         "id": id,
         "name": name,
+        "type": string,
         "description": description,
         "image": image,
         "promt": promt
@@ -115,6 +121,7 @@ GET /search?q=...&limit=...
     {
         "id": int,
         "name": string,
+        "type": string,
         "description": string,
         "image": string,
         "score": float
@@ -122,6 +129,7 @@ GET /search?q=...&limit=...
     {
         "id": int,
         "name": string,
+        "type": string,
         "description": string,
         "image": string,
         "score": float
@@ -129,12 +137,20 @@ GET /search?q=...&limit=...
 
 ]
 
-GET /products
+GET /search/text
+Параметры:
+ q
+ limit
+
+Запрос:
+GET /search?q=...&limit=...
+
 Ответ:
 [
     {
         "id": int,
         "name": string,
+        "type": string,
         "description": string,
         "image": string,
         "score": float
@@ -142,12 +158,44 @@ GET /products
     {
         "id": int,
         "name": string,
+        "type": string,
         "description": string,
         "image": string,
         "score": float
     }
 
 ]
+
+
+GET /search/hyb
+Параметры:
+ q
+ limit
+
+Запрос:
+GET /search?q=...&limit=...
+
+Ответ:
+[
+    {
+        "id": int,
+        "name": string,
+        "type": string,
+        "description": string,
+        "image": string,
+        "score": float
+    },
+    {
+        "id": int,
+        "name": string,
+        "type": string,
+        "description": string,
+        "image": string,
+        "score": float
+    }
+
+]
+
 
 POST /product/image/edit
 Параметры:

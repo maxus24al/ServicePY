@@ -1,6 +1,7 @@
-from qdrant_client.models import PointStruct, PointVectors
+from qdrant_client.models import PointStruct, PointVectors, SparseVector
 
-from app.qdrant_cl import client
+from app.qdrant_cl import client, sparse_model
+from fastembed import SparseTextEmbedding 
 from app.config import COLLECTION
 from app.t2v import embed_doc
 
@@ -21,6 +22,8 @@ class Product(BaseModel):
     promt: str = ""
 
 
+local_sparse_model = SparseTextEmbedding(model_name="Qdrant/bm25")
+
 def add_product(
     id: int,
     type: str,
@@ -28,6 +31,14 @@ def add_product(
     description: str,
 ):
     
+    full_text = f"{name} {type} {description}"
+    raw_sparse = list(local_sparse_model.embed([full_text]))[0]
+    
+    sparse_vector = SparseVector(
+        indices=raw_sparse.indices.tolist(),
+        values=raw_sparse.values.tolist()
+    )
+
     client.upsert(
         collection_name=COLLECTION,
         points=[
@@ -38,6 +49,7 @@ def add_product(
                     "name": embed_doc(name),
                     "type": embed_doc(type),
                     "description": embed_doc(description),
+                    "text_sparse": sparse_vector
                 },
                 payload={
                     "name": name,
@@ -64,6 +76,14 @@ def add_product_w_image(
     promt: str,
 ):
     
+    full_text = f"{name} {type} {description}"
+    raw_sparse = list(local_sparse_model.embed([full_text]))[0]
+    
+    sparse_vector = SparseVector(
+        indices=raw_sparse.indices.tolist(),
+        values=raw_sparse.values.tolist()
+    )
+
     client.upsert(
         collection_name=COLLECTION,
         points=[
@@ -74,7 +94,8 @@ def add_product_w_image(
                     "name": embed_doc(name),
                     "type": embed_doc(type),
                     "description": embed_doc(description),
-                    "image": embed_doc(image)
+                    "image": embed_doc(image),
+                    "text_sparse": sparse_vector
                 },
                 payload={
                     "name": name,

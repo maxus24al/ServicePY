@@ -1,25 +1,15 @@
-from fastapi import FastAPI, HTTPException, status, Header, Depends
+from fastapi import FastAPI, HTTPException, status, Header, Depends, Query
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 import os
 
-from app.qdrant_cl import create_collection
+from app.qdrant_cl import create_collection, sparse_model
 from app.products import add_product, add_product_w_image, add_image, Product, ProductImage, get_products, edit_image
-from app.search import search
+from app.search import search, t_search, hybrid_search
 from app.i2t import image_des
 
 app = FastAPI()
 
 API_TOKEN = os.environ["API_TOKEN"]
-
-# @app.post("/image-description")
-# async def image_description(file: UploadFile = File(...)):
-#     path = f"/tmp/{file.filename}"
-
-#     with open(path, "wb") as f:
-#         f.write(await file.read())
-
-#     return {"description": image_des(path)}
-
 
 security_scheme = HTTPBearer()
 
@@ -155,3 +145,30 @@ def get_all_products():
 @app.post("/product/image/edit", dependencies=[Depends(verify_token)])
 def edit_product_image(id: int, text: str):
     edit_image(id, text)
+
+
+@app.get("/search/text")
+def text_search(q: str = Query(..., min_length=2), limit: int = 10):
+    search_result = t_search(q, limit)
+    return [
+        {
+            "id": hit.id, 
+            "score": hit.score, 
+            "payload": hit.payload
+        } 
+        for hit in search_result.points
+    ]
+
+@app.get("/search/hyb")
+def hyb_search(q: str = Query(..., min_length=2), limit: int = 10):
+    search_result = hybrid_search(q=q, limit=limit)
+        
+    formatted_results = []
+    for hit in search_result.points:
+        formatted_results.append({
+            "id": hit.id,
+            "score": hit.score, 
+            "payload": hit.payload
+        })
+        
+    return formatted_results
