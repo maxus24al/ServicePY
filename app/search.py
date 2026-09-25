@@ -71,6 +71,23 @@ def t_search(q: str, limit: int = 10):
 
 
 def hybrid_search(q: str, limit: int = 10):
+    q_filter, _ = client.scroll(
+        collection_name=COLLECTION,
+        scroll_filter=models.Filter(
+            must=[
+                models.FieldCondition(
+                    key="type",
+                    match=models.MatchText(text=q)
+                )
+            ]
+        ),
+        limit=limit,
+        with_payload=True
+    )
+
+    if q_filter:
+        return q_filter
+
     raw_query_sparse = list(local_sparse_model.embed([q]))[0]
     query_sparse_vector = models.SparseVector(
         indices=raw_query_sparse.indices.tolist(),
@@ -78,7 +95,7 @@ def hybrid_search(q: str, limit: int = 10):
     )
 
     query_dense_vector = embed_query(q) 
-
+    
     search_result = client.query_points(
         collection_name=COLLECTION,
         
@@ -126,4 +143,4 @@ def hybrid_search(q: str, limit: int = 10):
         with_payload=True
     )
     
-    return search_result
+    return search_result.points

@@ -162,12 +162,12 @@ def text_search(q: str = Query(..., min_length=2), limit: int = 10):
 @app.get("/search/hyb")
 def hyb_search(q: str = Query(..., min_length=2), limit: int = 10):
     search_result = hybrid_search(q=q, limit=limit)
-        
+    
     formatted_results = []
-    for hit in search_result.points:
+    for hit in search_result:
         formatted_results.append({
             "id": hit.id,
-            "score": hit.score, 
+            "score": getattr(hit, "score", None), 
             "payload": hit.payload
         })
         
