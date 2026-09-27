@@ -71,7 +71,7 @@ def t_search(q: str, limit: int = 10):
 
 
 def hybrid_search(q: str, limit: int = 10):
-    q_filter, _ = client.scroll(
+    scroll_records, _ = client.scroll(
         collection_name=COLLECTION,
         scroll_filter=models.Filter(
             must=[
@@ -84,9 +84,13 @@ def hybrid_search(q: str, limit: int = 10):
         limit=limit,
         with_payload=True
     )
-
-    if q_filter:
-        return q_filter
+    
+    found_ids = [point.id for point in scroll_records]
+    
+    if len(found_ids) >= limit:
+        return scroll_records[:limit]
+        
+    remaining_limit = limit - len(found_ids)
 
     raw_query_sparse = list(local_sparse_model.embed([q]))[0]
     query_sparse_vector = models.SparseVector(
@@ -96,6 +100,14 @@ def hybrid_search(q: str, limit: int = 10):
 
     query_dense_vector = embed_query(q) 
     
+    exclude_filter = None
+    if found_ids:
+        exclude_filter = models.Filter(
+            must_not=[
+                models.HasIdCondition(has_id=found_ids)
+            ]
+        )
+    
     search_result = client.query_points(
         collection_name=COLLECTION,
         
@@ -103,27 +115,32 @@ def hybrid_search(q: str, limit: int = 10):
             models.Prefetch(
                 query=query_dense_vector,
                 using="name",
-                limit=15
+                limit=15,
+                filter=exclude_filter
             ),
             models.Prefetch(
                 query=query_dense_vector,
                 using="type",
-                limit=15
+                limit=15,
+                filter=exclude_filter
             ),
             models.Prefetch(
                 query=query_dense_vector,
                 using="description",
-                limit=15
+                limit=15,
+                filter=exclude_filter
             ),
             models.Prefetch(
                 query=query_dense_vector,
                 using="image",
-                limit=15
+                limit=15,
+                filter=exclude_filter
             ),
             models.Prefetch(
                 query=query_sparse_vector,
                 using="text_sparse",
-                limit=15
+                limit=15,
+                filter=exclude_filter
             )
         ],
         
@@ -139,8 +156,8 @@ def hybrid_search(q: str, limit: int = 10):
                 ]
             )
         ),
-        limit=limit,
+        limit=remaining_limit,
         with_payload=True
     )
     
-    return search_result.points
+    return scroll_records + search_result.points
