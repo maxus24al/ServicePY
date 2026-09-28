@@ -54,6 +54,7 @@ def add_product(
                 payload={
                     "name": name,
                     "type": type,
+                    "type_keyword": type,
                     "description": description,
                 },
             )
@@ -100,6 +101,7 @@ def add_product_w_image(
                 payload={
                     "name": name,
                     "type": type,
+                    "type_keyword": type,
                     "description": description,
                     "image": image,
                     "promt": promt,

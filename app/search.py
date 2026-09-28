@@ -76,7 +76,7 @@ def hybrid_search(q: str, limit: int = 10):
         scroll_filter=models.Filter(
             must=[
                 models.FieldCondition(
-                    key="type",
+                    key="type_keyword",
                     match=models.MatchText(text=q)
                 )
             ]

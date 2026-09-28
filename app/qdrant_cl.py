@@ -85,3 +85,9 @@ def create_collection():
             lowercase = True
         )
     )
+    
+    client.create_payload_index(
+        collection_name=COLLECTION,
+        field_name="type_keyword",
+        field_schema=PayloadSchemaType.KEYWORD
+    )
