@@ -48,8 +48,8 @@ client = OpenAI(
 
 def embed(text: str):
     response = client.embeddings.create(
-        model="qwen/qwen3-embedding-8b",
+        model="qwen/qwen3-embedding-4b",
         input=[text],
-        dimensions=4096
+        dimensions=2560
     )
     return response.data[0].embedding
