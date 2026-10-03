@@ -42,7 +42,7 @@ API_KEY = os.environ["PZ_API_KEY"]
 
 
 client = OpenAI(
-  base_url="https://polza.ai/api/v1",
+  base_url="https://routerai.ru/api/v1",
   api_key=API_KEY,
 )
 
