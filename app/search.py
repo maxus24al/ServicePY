@@ -156,8 +156,8 @@ def hybrid_search(q: str, limit: int = 10):
         ],
         query=models.RrfQuery(
             rrf=models.Rrf(
-                k=15,
-                weights=[0.5, 0.2, 0.1, 0.1, 1]
+                k=60,
+                weights=[0.4, 0.1, 0.05, 0.05, 3]
             )
         ),
         limit=remaining_limit,

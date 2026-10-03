@@ -2,7 +2,7 @@ import requests
 import os
 from openai import OpenAI
 
-API_KEY = os.environ["PZ_API_KEY"]
+API_KEY = os.environ["API_KEY"]
 
 #FOLDER_ID = os.environ["YC_FOLDER_ID"]
 

@@ -46,7 +46,9 @@ def create_collection():
             ),
         },
         sparse_vectors_config={
-                "text_sparse": models.SparseVectorParams()
+                "text_sparse": models.SparseVectorParams(
+                     modifier=models.Modifier.LEXICAL
+                )
             }
     )
     
