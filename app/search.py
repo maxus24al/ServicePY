@@ -1,14 +1,14 @@
 from app.qdrant_cl import client
 from fastembed import SparseTextEmbedding 
 from app.config import COLLECTION
-from app.t2v import embed_query
+from app.t2v import embed
 from qdrant_client import models
 
 
 local_sparse_model = SparseTextEmbedding(model_name="Qdrant/bm25")
 
 def search(q: str, limit: int = 5):
-    vector = embed_query(q)
+    vector = embed(q)
 
     result = client.query_points(
         collection_name=COLLECTION,
@@ -135,7 +135,7 @@ def hybrid_search(q: str, limit: int = 10):
         values=raw_query_sparse.values.tolist()
     )
 
-    query_dense_vector = embed_query(q) 
+    query_dense_vector = embed(q) 
     
     exclude_filter = None
     if all_found_ids:

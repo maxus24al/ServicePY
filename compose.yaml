@@ -19,6 +19,7 @@ services:
     environment:
       YC_API_KEY: ""
       YC_FOLDER_ID: ""
+      PZ_API_KEY: ""
       API_TOKEN: "API_TOKEN"
       
 
