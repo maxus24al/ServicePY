@@ -1,6 +1,8 @@
 import requests
 import os
 from openai import OpenAI
+import re
+import pymorphy3
 
 API_KEY = os.environ["API_KEY"]
 
@@ -46,6 +48,8 @@ client = OpenAI(
   api_key=API_KEY,
 )
 
+morph = pymorphy3.MorphAnalyzer()
+
 def embed(text: str):
     response = client.embeddings.create(
         model="qwen/qwen3-embedding-4b",
@@ -53,3 +57,16 @@ def embed(text: str):
         dimensions=2560
     )
     return response.data[0].embedding
+
+
+def lemmatize(text: str) -> str:
+    words = re.findall(r'[а-яА-ЯёЁa-zA-Z0-9]+', text.lower())
+
+    lemmas = []
+    for word in words:
+        if re.match(r'^[а-яА-ЯёЁ]+$', word):
+            lemmas.append(morph.parse(word)[0].normal_form)
+        else:
+            lemmas.append(word)
+
+    return "".join(lemmas)

@@ -1,11 +1,11 @@
 from qdrant_client.models import PointStruct, PointVectors, SparseVector
-
 from app.qdrant_cl import client, sparse_model
 from fastembed import SparseTextEmbedding 
 from app.config import COLLECTION
-from app.t2v import embed
+from app.t2v import embed, lemmatize
 
 from pydantic import BaseModel
+
 
 class ProductImage(BaseModel):
     id: int
@@ -24,6 +24,8 @@ class Product(BaseModel):
 
 local_sparse_model = SparseTextEmbedding(model_name="Qdrant/bm25")
 
+
+
 def add_product(
     id: int,
     type: str,
@@ -32,7 +34,8 @@ def add_product(
 ):
     
     full_text = f"{name} {type} {description}"
-    raw_sparse = list(local_sparse_model.embed([full_text]))[0]
+    lemmatized_text = lemmatize(full_text)
+    raw_sparse = list(local_sparse_model.embed([lemmatized_text]))[0]
     
     sparse_vector = SparseVector(
         indices=raw_sparse.indices.tolist(),
@@ -74,11 +77,13 @@ def add_product_w_image(
     type: type,
     description: str,
     image: str,
+    image_url: str,
     promt: str,
 ):
     
     full_text = f"{name} {type} {description}"
-    raw_sparse = list(local_sparse_model.embed([full_text]))[0]
+    lemmatized_text = lemmatize(full_text)
+    raw_sparse = list(local_sparse_model.embed([lemmatized_text]))[0]
     
     sparse_vector = SparseVector(
         indices=raw_sparse.indices.tolist(),
@@ -104,6 +109,7 @@ def add_product_w_image(
                     "type_keyword": type,
                     "description": description,
                     "image": image,
+                    "image_url": image_url,
                     "promt": promt,
                 },
             )
@@ -124,6 +130,7 @@ def add_product_w_image(
 def add_image(
     id: int,
     image: str,
+    image_url: str,
     promt: str,
 ):
     points = client.retrieve(
@@ -176,6 +183,7 @@ def get_products():
             "type": point.payload.get("type"),
             "description": point.payload.get("description"),
             "image": point.payload.get("image"),
+            "image_url": point.payload.get("image_url"),
             "promt": point.payload.get("promt"),
         }
         for point in points

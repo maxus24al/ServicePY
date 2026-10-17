@@ -1,7 +1,7 @@
 from app.qdrant_cl import client
 from fastembed import SparseTextEmbedding 
 from app.config import COLLECTION
-from app.t2v import embed
+from app.t2v import embed, lemmatize
 from qdrant_client import models
 
 
@@ -129,7 +129,8 @@ def hybrid_search(q: str, limit: int = 10):
         
     remaining_limit = limit - len(final_results)
 
-    raw_query_sparse = list(local_sparse_model.embed([q]))[0]
+    lemmatized_q = lemmatize(q)
+    raw_query_sparse = list(local_sparse_model.embed([lemmatized_q]))[0]
     query_sparse_vector = models.SparseVector(
         indices=raw_query_sparse.indices.tolist(),
         values=raw_query_sparse.values.tolist()

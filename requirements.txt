@@ -1,6 +1,7 @@
-qdrant-client[fastembed]
+qdrant-client[fastembed]>=1.11.0
 fastapi
 uvicorn
 requests
 openai
 python-multipart
+pymorphy3

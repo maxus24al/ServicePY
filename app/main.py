@@ -40,6 +40,7 @@ async def create_product(product: Product):
             type=product.type,
             description=product.description,
             image=image_description,
+            image_url=product.image,
             promt=product.promt
         )
 
@@ -65,6 +66,7 @@ async def add_product_image(product: ProductImage):
     response = add_image(
         id=product.id,
         image=image_description,
+        image_url=product.image,
         promt=product.promt,
     )
 
@@ -87,6 +89,7 @@ def create_products(products: list[Product]):
                 type=product.type,
                 description=product.description,
                 image=image_description,
+                image_url=product.image,
                 promt=product.promt
             ))
     
@@ -115,6 +118,7 @@ async def add_products_images(products: list[ProductImage]):
             add_image(
                 id=product.id,
                 image=image_description,
+                image_url=image,
                 promt=product.promt,
             )
         )

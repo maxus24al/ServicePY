@@ -1,5 +1,6 @@
 from qdrant_client import QdrantClient, models
 from fastembed import SparseTextEmbedding 
+from app.t2v import lemmatize
 from qdrant_client.models import Distance, VectorParams, TextIndexParams, TokenizerType
 from qdrant_client.http.exceptions import UnexpectedResponse
 
@@ -47,7 +48,7 @@ def create_collection():
         },
         sparse_vectors_config={
                 "text_sparse": models.SparseVectorParams(
-                     modifier=models.Modifier.LEXICAL
+                     modifier=models.Modifier.IDF
                 )
             }
     )

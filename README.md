@@ -20,6 +20,7 @@ POST /product
     "type": string,
     "description": description,
     "image": image,
+    "image_url": url,
     "promt": promt
 }
 
@@ -27,14 +28,15 @@ POST /product/image
 Запрос:
 {
     "id": id,
-    "image": string,
+    "image": url,
     "promt": string
 }
 
 Ответ:
 {
     "id": id,
-    "image": url,
+    "image": string,
+    "image_url": url,
     "promt": string
 }
 
@@ -66,7 +68,8 @@ POST /products
         "name": name,
         "type": string,
         "description": description,
-        "image": image,
+        "image": string,
+        "image_url": url,
         "promt": promt
     },
     {
@@ -75,11 +78,12 @@ POST /products
         "type": string,
         "description": description,
         "image": image,
+        "image_url": url,
         "promt": promt
     }
 ]
 
-POST /products/image
+POST /products/images
 Запрос:
 [
     {
@@ -99,11 +103,13 @@ POST /products/image
     {
         "id": id,
         "image": string,
+        "image_url": url,
         "promt": string
     },
     {
         "id": id,
         "image": string,
+        "image_url": url,
         "promt": string
     }
 ]
@@ -124,6 +130,7 @@ GET /search?q=...&limit=...
         "type": string,
         "description": string,
         "image": string,
+        "image_url": url,
         "score": float
     },
     {
@@ -132,6 +139,7 @@ GET /search?q=...&limit=...
         "type": string,
         "description": string,
         "image": string,
+        "image_url": url,
         "score": float
     }
 
@@ -153,6 +161,7 @@ GET /search?q=...&limit=...
         "type": string,
         "description": string,
         "image": string,
+        "image_url": url,
         "score": float
     },
     {
@@ -161,6 +170,7 @@ GET /search?q=...&limit=...
         "type": string,
         "description": string,
         "image": string,
+        "image_url": url,
         "score": float
     }
 
@@ -183,6 +193,7 @@ GET /search?q=...&limit=...
         "type": string,
         "description": string,
         "image": string,
+        "image_url": url,
         "score": float
     },
     {
@@ -191,6 +202,7 @@ GET /search?q=...&limit=...
         "type": string,
         "description": string,
         "image": string,
+        "image_url": url,
         "score": float
     }
 
