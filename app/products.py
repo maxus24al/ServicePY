@@ -2,7 +2,7 @@ from qdrant_client.models import PointStruct, PointVectors, SparseVector
 from app.qdrant_cl import client, sparse_model
 from fastembed import SparseTextEmbedding 
 from app.config import COLLECTION
-from app.t2v import embed, lemmatize
+from app.t2v import embed_doc, lemmatize
 
 from pydantic import BaseModel
 
@@ -49,9 +49,9 @@ def add_product(
                 id=id,
                 vector={
                     
-                    "name": embed(name),
-                    "type": embed(type),
-                    "description": embed(description),
+                    "name": embed_doc(name),
+                    "type": embed_doc(type),
+                    "description": embed_doc(description),
                     "text_sparse": sparse_vector
                 },
                 payload={
@@ -97,10 +97,10 @@ def add_product_w_image(
                 id=id,
                 vector={
                     
-                    "name": embed(name),
-                    "type": embed(type),
-                    "description": embed(description),
-                    "image": embed(image),
+                    "name": embed_doc(name),
+                    "type": embed_doc(type),
+                    "description": embed_doc(description),
+                    "image": embed_doc(image),
                     "text_sparse": sparse_vector
                 },
                 payload={
@@ -148,7 +148,7 @@ def add_image(
             PointVectors(
                 id=id,
                 vector={
-                    "image": embed(image),
+                    "image": embed_doc(image),
                 },
             )
         ],
@@ -208,7 +208,7 @@ def edit_image(
             PointVectors(
                 id=id,
                 vector={
-                    "image": embed(image),
+                    "image": embed_doc(image),
                 },
             )
         ],

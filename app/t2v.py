@@ -4,43 +4,52 @@ from openai import OpenAI
 import re
 import pymorphy3
 
+
 API_KEY = os.environ["API_KEY"]
+YC_API_KEY = os.environ["YC_API_KEY"]
+FOLDER_ID = os.environ["YC_FOLDER_ID"]
+EMBEDDER = os.getenv("EMBED_PROVIDER", "yandexai")
 
-#FOLDER_ID = os.environ["YC_FOLDER_ID"]
+URL = "https://llm.api.cloud.yandex.net/foundationModels/v1/textEmbedding"
 
-# URL = "https://llm.api.cloud.yandex.net/foundationModels/v1/textEmbedding"
+headers = {
+    "Authorization": f"Api-Key {YC_API_KEY}",
+    "Content-Type": "application/json",
+}
 
-# headers = {
-#     "Authorization": f"Api-Key {API_KEY}",
-#     "Content-Type": "application/json",
-# }
-
-# def embed_doc(text: str):
-#     body = {
-#         "modelUri": f"emb://{FOLDER_ID}/text-embeddings-v2-doc/latest",
-#         "text": text,
-#         "dim": 768
-#     }
+def embed_doc(text: str):
+    if EMBEDDER == "routerai":
+      return embed(text)
+      
+    body = {
+        "modelUri": f"emb://{FOLDER_ID}/text-embeddings-v2-doc/latest",
+        "text": text,
+        "dim": 768
+    }
     
-#     response = requests.post(URL, headers=headers, json=body)
+    response = requests.post(URL, headers=headers, json=body)
 
-#     response.raise_for_status()
+    response.raise_for_status()
 
-#     return response.json()["embedding"]
+    return response.json()["embedding"]
 
 
-# def embed_query(text: str):
-#     body = {
-#         "modelUri": f"emb://{FOLDER_ID}/text-embeddings-v2-query/latest",
-#         "text": text,
-#         "dim": 768
-#     }
+def embed_query(text: str):
+    if EMBEDDER == "routerai":
+      return embed(text)
+      
 
-#     response = requests.post(URL, headers=headers, json=body)
+    body = {
+        "modelUri": f"emb://{FOLDER_ID}/text-embeddings-v2-query/latest",
+        "text": text,
+        "dim": 768
+    }
 
-#     response.raise_for_status()
+    response = requests.post(URL, headers=headers, json=body)
 
-#     return response.json()["embedding"]
+    response.raise_for_status()
+
+    return response.json()["embedding"]
 
 
 client = OpenAI(
@@ -68,5 +77,6 @@ def lemmatize(text: str) -> str:
             lemmas.append(morph.parse(word)[0].normal_form)
         else:
             lemmas.append(word)
-
     return "".join(lemmas)
+
+

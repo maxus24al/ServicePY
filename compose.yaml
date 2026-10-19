@@ -17,6 +17,7 @@ services:
     volumes:
       - .:/app
     environment:
+      EMBED_PROVIDER: "yandexai"
       YC_API_KEY: ""
       YC_FOLDER_ID: ""
       API_KEY: ""
