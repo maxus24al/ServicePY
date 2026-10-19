@@ -135,6 +135,7 @@ def search_products(q: str, limit: int = 5):
             "name": point.payload.get("name"),
             "type": point.payload.get("type"),
             "description": point.payload.get("description"),
+            "lem_text": point.payload.get("lem_text"),
             "image": point.payload.get("image"),
             "promt": point.payload.get("promt"),
             "score": point.score,
@@ -151,7 +152,7 @@ def edit_product_image(id: int, text: str):
     edit_image(id, text)
 
 
-@app.get("/search/text")
+@app.get("/search/text", dependencies=[Depends(verify_token)])
 def text_search(q: str = Query(..., min_length=2), limit: int = 10):
     search_result = t_search(q, limit)
     return [
@@ -163,7 +164,7 @@ def text_search(q: str = Query(..., min_length=2), limit: int = 10):
         for hit in search_result.points
     ]
 
-@app.get("/search/hyb")
+@app.get("/search/hyb", dependencies=[Depends(verify_token)])
 def hyb_search(q: str = Query(..., min_length=2), limit: int = 10):
     search_result = hybrid_search(q=q, limit=limit)
     

@@ -77,6 +77,6 @@ def lemmatize(text: str) -> str:
             lemmas.append(morph.parse(word)[0].normal_form)
         else:
             lemmas.append(word)
-    return "".join(lemmas)
+    return " ".join(lemmas)
 
 

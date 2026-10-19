@@ -58,6 +58,7 @@ def add_product(
                     "name": name,
                     "type": type,
                     "type_keyword": type,
+                    "lem_text": lemmatized_text,
                     "description": description,
                 },
             )
@@ -69,6 +70,7 @@ def add_product(
         "name": name,
         "type": type,
         "description": description,
+        "lem_text": lemmatized_text,
     }
 
 def add_product_w_image(
@@ -121,6 +123,7 @@ def add_product_w_image(
         "name": name,
         "type": type,
         "description": description,
+        "lem_text": lemmatized_text,
         "image": image,
         "promt": promt,
     }
@@ -182,8 +185,10 @@ def get_products():
             "name": point.payload.get("name"),
             "type": point.payload.get("type"),
             "description": point.payload.get("description"),
+            "lem_text": lemmatized_text,
             "image": point.payload.get("image"),
             "image_url": point.payload.get("image_url"),
+            "lem_text": point.payload.get("lem_text"),
             "promt": point.payload.get("promt"),
         }
         for point in points
