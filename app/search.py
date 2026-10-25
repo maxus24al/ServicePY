@@ -147,11 +147,11 @@ def hybrid_search(q: str, limit: int = 10):
     search_result = client.query_points(
         collection_name=COLLECTION,
         prefetch=[
-            models.Prefetch(query=query_dense_vector, using="name", limit=50, filter=exclude_filter),
+            models.Prefetch(query=query_dense_vector, using="name", limit=200, filter=exclude_filter),
             models.Prefetch(query=query_dense_vector, using="type", limit=50, filter=exclude_filter),
-            models.Prefetch(query=query_dense_vector, using="description", limit=50, filter=exclude_filter),
+            models.Prefetch(query=query_dense_vector, using="description", limit=200, filter=exclude_filter),
             models.Prefetch(query=query_dense_vector, using="image", limit=50, filter=exclude_filter),
-            models.Prefetch(query=query_sparse_vector, using="text_sparse", limit=50, filter=exclude_filter)
+            models.Prefetch(query=query_sparse_vector, using="text_sparse", limit=100, filter=exclude_filter)
         ],
         query=models.FusionQuery(
             fusion=models.Fusion.DBSF
