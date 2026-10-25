@@ -5,7 +5,7 @@ from app.t2v import embed_query, lemmatize
 from qdrant_client import models
 
 
-local_sparse_model = SparseTextEmbedding(model_name="Qdrant/bm25")
+local_sparse_model = SparseTextEmbedding(model_name="Qdrant/bm25", language="russian")
 
 def search(q: str, limit: int = 5):
     vector = embed(q)
@@ -129,8 +129,7 @@ def hybrid_search(q: str, limit: int = 10):
         
     remaining_limit = limit - len(final_results)
 
-    lemmatized_q = lemmatize(q)
-    raw_query_sparse = list(local_sparse_model.embed([lemmatized_q]))[0]
+    raw_query_sparse = list(local_sparse_model.embed([q]))[0]
     query_sparse_vector = models.SparseVector(
         indices=raw_query_sparse.indices.tolist(),
         values=raw_query_sparse.values.tolist()
@@ -155,11 +154,8 @@ def hybrid_search(q: str, limit: int = 10):
             models.Prefetch(query=query_dense_vector, using="image", limit=15, filter=exclude_filter),
             models.Prefetch(query=query_sparse_vector, using="text_sparse", limit=15, filter=exclude_filter)
         ],
-        query=models.RrfQuery(
-            rrf=models.Rrf(
-                k=60,
-                weights=[0.4, 0.1, 0.05, 0.05, 3]
-            )
+        query=models.FusionQuery(
+            fusion=models.Fusion.DBSF
         ),
         limit=remaining_limit,
         with_payload=True
