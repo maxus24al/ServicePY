@@ -1,5 +1,5 @@
 from qdrant_client.models import PointStruct, PointVectors, SparseVector
-from app.qdrant_cl import client, sparse_model
+from app.qdrant_cl import client, local_sparse_model
 from fastembed import SparseTextEmbedding 
 from app.config import COLLECTION
 from app.t2v import embed_doc, lemmatize
@@ -22,7 +22,6 @@ class Product(BaseModel):
     promt: str = ""
 
 
-local_sparse_model = SparseTextEmbedding(model_name="Qdrant/bm25")
 
 
 

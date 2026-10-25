@@ -15,9 +15,7 @@ client = QdrantClient(
     host=QDRANT_HOST,
     port=QDRANT_PORT,
 )
-sparse_model = SparseTextEmbedding(model_name="Qdrant/bm25")
-
-print(sparse_model)
+local_sparse_model = SparseTextEmbedding(model_name="Qdrant/bm25", language="russian")
 
 
 def create_collection():
