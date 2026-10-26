@@ -5,13 +5,18 @@
 POST /product
 Запрос:
 {
-    "id": int,
-    "name": string,
-    "type": string,
-    "description": string,
-    "image": url,
-    "promt": string
+    "id": id,
+    "name": name,
+    "type": type,
+    "description": description,
+    "image_t": url,
+    "image_ind": url,
+    "promt": ""
 }
+
+image_t - url для создания текста
+image_ind - url для индексации картинки
+ОДНОВРЕМЕННО НЕ РАБОТАЕТ!
 
 Ответ:
 {
@@ -19,8 +24,9 @@ POST /product
     "name": name,
     "type": string,
     "description": description,
-    "image": image,
-    "image_url": url,
+    "image_t": string,
+    "image_t_url": url,
+    "image_ind_url": url,
     "promt": promt
 }
 
@@ -215,3 +221,10 @@ POST /product/image/edit
  text
 
 Запрос /product/image/edit?id=...&text=...
+
+GET /search/image
+Параметры:
+ q
+ limit
+
+Запрос /search/image?q=url&limit=...
