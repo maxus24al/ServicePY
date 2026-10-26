@@ -43,6 +43,10 @@ def create_collection():
                 size=VECTOR_SIZE,
                 distance=Distance.COSINE,
             ),
+            "image_ind": VectorParams(
+                size=1024,
+                distance=Distance.COSINE,
+            ),
         },
         sparse_vectors_config={
                 "text_sparse": models.SparseVectorParams(

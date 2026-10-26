@@ -3,6 +3,7 @@ from app.qdrant_cl import client, local_sparse_model
 from fastembed import SparseTextEmbedding 
 from app.config import COLLECTION
 from app.t2v import embed_doc, lemmatize
+from app.i2t import image_ind
 
 from pydantic import BaseModel
 
@@ -98,6 +99,7 @@ def add_product_w_image(
                     "type": embed_doc(type),
                     "description": embed_doc(description),
                     "image": embed_doc(image),
+                    "image_ind": image_ind(image_url),
                     "text_sparse": sparse_vector
                 },
                 payload={
@@ -146,6 +148,7 @@ def add_image(
                 id=id,
                 vector={
                     "image": embed_doc(image),
+                    "image_ind": image_ind(image_url),
                 },
             )
         ],
