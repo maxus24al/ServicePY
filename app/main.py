@@ -3,7 +3,7 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 import os
 
 from app.qdrant_cl import create_collection, local_sparse_model
-from app.products import add_product, add_product_w_image, add_image, Product, ProductImage, get_products, edit_image
+from app.products import add_product, add_product_w_image_t, add_product_w_image_i, add_image, Product, ProductImage, get_products, edit_image
 from app.search import search, t_search, hybrid_search, image_search
 from app.i2t import image_des
 
@@ -31,19 +31,26 @@ def startup():
 @app.post("/product", dependencies=[Depends(verify_token)])
 async def create_product(product: Product):
 
-    if(product.image != ''):
-        image_description = image_des(product.image, product.promt)
+    if(product.image_t != ''):
+        image_description = image_des(product.image_t, product.promt)
 
-        response = add_product_w_image(
+        response = add_product_w_image_t(
             id=product.id,
             name=product.name,
             type=product.type,
             description=product.description,
             image=image_description,
-            image_url=product.image,
+            image_url=product.image_t,
             promt=product.promt
         )
-
+    elif(product.image_ind != ''):
+        response = add_product_w_image_i(
+            id=product.id,
+            name=product.name,
+            type=product.type,
+            description=product.description,
+            image_url=product.image_ind,
+        )
     else:
         response = add_product(
             id=product.id,
@@ -80,10 +87,10 @@ def create_products(products: list[Product]):
 
     for product in products:
 
-        if(product.image != ''):
+        if(product.image_t != ''):
             image_description = image_des(product.image, product.promt)
     
-            response.append(add_product_w_image(
+            response.append(add_product_w_image_t(
                 id=product.id,
                 name=product.name,
                 type=product.type,
@@ -92,7 +99,14 @@ def create_products(products: list[Product]):
                 image_url=product.image,
                 promt=product.promt
             ))
-    
+        elif(product.image_ind != ''):
+            response.append(add_product_w_image_i(
+                id=product.id,
+                name=product.name,
+                type=product.type,
+                description=product.description,
+                image_url=product.image,
+            ))
         else:
             response.append(add_product(
                 id=product.id,

@@ -19,7 +19,8 @@ class Product(BaseModel):
     name: str
     type: str
     description: str
-    image: str = ""
+    image_t: str = ""
+    image_ind: str = ""
     promt: str = ""
 
 
@@ -70,7 +71,7 @@ def add_product(
         "description": description,
     }
 
-def add_product_w_image(
+def add_product_w_image_t(
     id: int,
     name: str,
     type: type,
@@ -99,7 +100,6 @@ def add_product_w_image(
                     "type": embed_doc(type),
                     "description": embed_doc(description),
                     "image": embed_doc(image),
-                    "image_ind": image_ind(image_url),
                     "text_sparse": sparse_vector
                 },
                 payload={
@@ -124,6 +124,52 @@ def add_product_w_image(
         "promt": promt,
     }
 
+
+def add_product_w_image_i(
+    id: int,
+    name: str,
+    type: type,
+    description: str,
+    image_url: str,
+):
+    
+    full_text = f"{name} {type} {description}"
+    raw_sparse = list(local_sparse_model.embed([full_text]))[0]
+    
+    sparse_vector = SparseVector(
+        indices=raw_sparse.indices.tolist(),
+        values=raw_sparse.values.tolist()
+    )
+
+    client.upsert(
+        collection_name=COLLECTION,
+        points=[
+            PointStruct(
+                id=id,
+                vector={
+                    
+                    "name": embed_doc(name),
+                    "type": embed_doc(type),
+                    "description": embed_doc(description),
+                    "image_ind": image_ind(image_url),
+                    "text_sparse": sparse_vector
+                },
+                payload={
+                    "name": name,
+                    "type": type,
+                    "type_keyword": type,
+                    "description": description,
+                },
+            )
+        ],
+    )
+
+    return {
+        "id": id,
+        "name": name,
+        "type": type,
+        "description": description,
+    }
 
 
 def add_image(
