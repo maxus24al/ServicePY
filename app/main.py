@@ -3,7 +3,7 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 import os
 
 from app.qdrant_cl import create_collection, local_sparse_model
-from app.products import add_product, add_product_w_image_t, add_product_w_image_i, add_image, Product, ProductImage, get_products, edit_image
+from app.products import add_product, add_product_w_image_t, add_product_w_image_i, add_image, Product, ProductImage, get_products, edit_image, add_image_ind
 from app.search import search, t_search, hybrid_search, image_search
 from app.i2t import image_des
 
@@ -204,3 +204,7 @@ def img_search(q: str = Query(..., min_length=2), limit: int = 10):
         } 
         for hit in search_result.points
     ]
+
+@app.post("/product/image/ind", dependencies=[Depends(verify_token)])
+def image_index_add(id: int, url: str):
+    add_image_ind(id, url)

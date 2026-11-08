@@ -273,3 +273,38 @@ def edit_image(
         "id": id,
         "image": image,
     }
+
+from qdrant_client.models import PointVectors
+
+def add_image_ind(id: int, image_url: str):
+    points = client.retrieve(
+        collection_name=COLLECTION,
+        ids=[id],
+        with_payload=True,
+    )
+
+    if not points:
+        raise ValueError(f"Product with id={id} not found")
+
+    client.update_vectors(
+        collection_name=COLLECTION,
+        points=[
+            PointVectors(
+                id=id,
+                vector={
+                    "image_ind": image_ind(image_url),
+                },
+            )
+        ],
+    )
+
+    client.set_payload(
+        collection_name=COLLECTION,
+        payload={"image_url": image_url},
+        points=[id],
+    )
+
+    return {
+        "id": id,
+        "image_url": image_url,
+    }

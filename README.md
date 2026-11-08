@@ -228,3 +228,11 @@ GET /search/image
  limit
 
 Запрос /search/image?q=url&limit=...
+
+
+POST /product/image/ind
+Параметры:
+ id
+ url
+
+Запрос /product/image/ind?id=...&url=...
