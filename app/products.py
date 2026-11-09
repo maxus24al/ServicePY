@@ -306,3 +306,8 @@ def add_image_ind(id: int, image_url: str):
         payload={"image_url": image_url},
         points=[id],
     )
+
+    return {
+        "id": id,
+        "image_url": image_url
+    }
