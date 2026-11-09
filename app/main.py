@@ -207,4 +207,5 @@ def img_search(q: str = Query(..., min_length=2), limit: int = 10):
 
 @app.post("/product/image/ind", dependencies=[Depends(verify_token)])
 def image_index_add(product: ProductImageIndex):
-    add_image_ind(product.id, product.image_url)
+    response = add_image_ind(product.id, product.image_url)
+    return response
