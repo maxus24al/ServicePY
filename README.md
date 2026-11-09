@@ -231,8 +231,8 @@ GET /search/image
 
 
 POST /product/image/ind
-Параметры:
- id
- url
-
-Запрос /product/image/ind?id=...&url=...
+Запрос
+{
+    "id": int,
+    "image_url": url 
+}

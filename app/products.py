@@ -13,6 +13,9 @@ class ProductImage(BaseModel):
     image: str
     promt: str
 
+class ProductImageIndex(BaseModel):
+    id: int
+    image_url: str
 
 class Product(BaseModel):
     id: int
@@ -303,8 +306,3 @@ def add_image_ind(id: int, image_url: str):
         payload={"image_url": image_url},
         points=[id],
     )
-
-    return {
-        "id": id,
-        "image_url": image_url,
-    }
