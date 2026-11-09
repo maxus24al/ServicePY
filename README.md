@@ -2,6 +2,7 @@
  В header запроса прописать
  'Authorization': 'Bearer API_TOKEN'
 
+Добавление товара
 POST /product
 Запрос:
 {
@@ -14,7 +15,7 @@ POST /product
     "promt": ""
 }
 
-image_t - url для создания текста
+image_t - url для создания текста описания по картинке
 image_ind - url для индексации картинки
 ОДНОВРЕМЕННО НЕ РАБОТАЕТ!
 
@@ -46,6 +47,7 @@ POST /product/image
     "promt": string
 }
 
+Множественное добавление товаров
 POST /products
 Запрос:
 [
@@ -182,7 +184,7 @@ GET /search?q=...&limit=...
 
 ]
 
-
+Гибридный поиск
 GET /search/hyb
 Параметры:
  q
@@ -214,7 +216,7 @@ GET /search?q=...&limit=...
 
 ]
 
-
+Ручная замена текста описания изображения
 POST /product/image/edit
 Параметры:
  id
@@ -222,6 +224,7 @@ POST /product/image/edit
 
 Запрос /product/image/edit?id=...&text=...
 
+Поиск по изображению
 GET /search/image
 Параметры:
  q
@@ -229,10 +232,18 @@ GET /search/image
 
 Запрос /search/image?q=url&limit=...
 
-
+Добавление индексации изображения к существующему товару
 POST /product/image/ind
 Запрос
 {
     "id": int,
     "image_url": url 
 }
+
+Поиск схожих к товару по изображению
+GET /search/image/similar
+Параметры:
+ id
+ limit
+
+Запрос /search/image/similar?id=..&limit=...

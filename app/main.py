@@ -4,7 +4,7 @@ import os
 
 from app.qdrant_cl import create_collection, local_sparse_model
 from app.products import add_product, add_product_w_image_t, add_product_w_image_i, add_image, Product, ProductImage, ProductImageIndex, get_products, edit_image, add_image_ind
-from app.search import search, t_search, hybrid_search, image_search
+from app.search import search, t_search, hybrid_search, image_search, image_similar_search
 from app.i2t import image_des
 
 app = FastAPI()
@@ -209,3 +209,17 @@ def img_search(q: str = Query(..., min_length=2), limit: int = 10):
 def image_index_add(product: ProductImageIndex):
     response = add_image_ind(product.id, product.image_url)
     return response
+
+
+@app.get("/search/image/similar", dependencies=[Depends(verify_token)])
+def search_image_similar(id: int, limit: int = 10):
+    response = image_similar_search(id, limit)
+
+    return [
+        {
+            "id": hit.id, 
+            "score": hit.score, 
+            "payload": hit.payload
+        } 
+        for hit in response.points
+    ]

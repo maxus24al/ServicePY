@@ -177,3 +177,30 @@ def image_search(q: str, limit: int = 10):
     )
 
     return result
+
+
+def image_similar_search(id: int, limit: int = 10):
+    points = client.retrieve(
+        collection_name=COLLECTION,
+        ids=[id],
+        with_payload=False,
+        with_vectors=True,
+    )
+
+    if not points:
+        raise ValueError(f"Product with id={id} not found")
+
+    point = points[0]
+
+    if not "image_ind" in point.vector:
+        raise ValueError(f"Product with id={id} doesn't have image_ind")
+
+    result = client.query_points(
+        collection_name=COLLECTION,
+        query=point.vector["image_ind"],
+        using="image_ind",
+        limit=limit,
+        with_payload=True
+    )
+
+    return result
